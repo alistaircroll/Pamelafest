@@ -314,15 +314,13 @@ function resize(){
 window.addEventListener('resize',resize);
 // ---- landscape-only gate: pause + show rotate prompt while portrait, resume on landscape
 function isTouchDevice(){
-  const mm = window.matchMedia;
-  if(mm){
-    // A real desktop/laptop has a fine pointer that can hover (mouse or trackpad) — never gate it,
-    // even in a tall window or on a portrait monitor.
-    if(mm('(pointer: fine)').matches && mm('(hover: hover)').matches) return false;
-    // Otherwise any touch-primary signal means a phone/tablet that should rotate.
-    if(mm('(pointer: coarse)').matches || mm('(hover: none)').matches) return true;
-  }
-  return (navigator.maxTouchPoints||0) > 0 || ('ontouchstart' in window);  // fallback
+  // No touchscreen hardware (a MacBook / any desktop) → always a desktop, never gated,
+  // whatever the window shape. maxTouchPoints is 0 on non-touch machines, >0 on phones/tablets.
+  if((navigator.maxTouchPoints||0) === 0) return false;
+  // Has a touchscreen. If the primary pointer is a fine pointer that can hover (a trackpad/mouse
+  // on a 2-in-1 laptop), it's still a desktop; otherwise it's a phone/tablet that should rotate.
+  if(window.matchMedia && window.matchMedia('(pointer: fine)').matches && window.matchMedia('(hover: hover)').matches) return false;
+  return true;
 }
 function checkOrientation(){
   // Gate only touch devices that can actually rotate — desktops/laptops (fine pointer,
@@ -1315,7 +1313,7 @@ document.getElementById('btn-replay').onclick=function(){ sfx.click(); startGame
 // ============================================================ boot
 window.__pam = { S:S, pam:pam, ZONES:ZONES, AMEN:AMEN_DEF, AMEN_TILES:AMEN_TILES, floorEvents:floorEvents, w2s:function(a,b){return w2s(a,b);}, setLang:function(l){setLang(l);}, getLang:function(){return LANG;} };
 ['langtoggle','start-lang','end-lang'].forEach(function(id){ const e=document.getElementById(id); if(e) e.onclick=function(){ setLang(LANG==='en'?'fr':'en'); }; });
-console.info('Pamelafest — build r14 · robust touch detection for rotate gate; fix landing lang-button overlap');
+console.info('Pamelafest — build r15 · desktop = no touchscreen (maxTouchPoints 0); never gated, any window shape');
 applyLang();
 resize();
 drawPortrait();

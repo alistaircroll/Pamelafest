@@ -100,6 +100,10 @@
     display:flex;align-items:center;justify-content:center;transition:transform .1s,background .15s;}
   .btn:hover{background:rgba(54,40,120,.95);transform:translateY(-2px);}
   .btn:active{transform:translateY(0);}
+  #btn-fs svg{width:19px;height:19px;display:block;}
+  #btn-fs .fs-exit{display:none;}
+  #btn-fs.on .fs-enter{display:none;}
+  #btn-fs.on .fs-exit{display:block;}
 
   /* toasts */
   #toasts{position:absolute;top:96px;left:50%;transform:translateX(-50%);
@@ -245,6 +249,10 @@
     </div>
 
     <div id="btns">
+      <button class="btn" id="btn-fs" title="Fullscreen (F)">
+        <svg class="fs-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+        <svg class="fs-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
+      </button>
       <button class="btn" id="btn-pause" title="Pause (P)">⏸</button>
       <button class="btn" id="btn-mute" title="Mute (M)">🔊</button>
       <button class="btn" id="btn-help" title="How to play (H)">❔</button>
@@ -675,6 +683,7 @@ window.addEventListener('keydown',e=>{
   const k=e.key.toLowerCase();
   if(k==='p'){ togglePause(); }
   else if(k==='m'){ toggleMute(); }
+  else if(k==='f'){ toggleFullscreen(); }
   else if(k==='h'){ if(S.mode==='play') togglePause(true); else if(S.mode==='paused') togglePause(); }
   else if(k==='arrowright'||k==='d') stepDir(1,0);
   else if(k==='arrowleft'||k==='a') stepDir(-1,0);
@@ -1260,6 +1269,24 @@ document.getElementById('btn-pause').onclick=function(){togglePause();};
 document.getElementById('btn-mute').onclick=toggleMute;
 document.getElementById('btn-help').onclick=function(){ togglePause(); };
 
+// fullscreen — works on desktop, Android, iPad. iPhone Safari exposes no fullscreen API, so we hide the button there.
+function fsActive(){ return !!(document.fullscreenElement||document.webkitFullscreenElement); }
+function fsSupported(){ const e=document.documentElement; return !!(e.requestFullscreen||e.webkitRequestFullscreen); }
+function toggleFullscreen(){
+  if(!fsSupported()) return;
+  try{
+    if(fsActive()){ const x=document.exitFullscreen||document.webkitExitFullscreen; if(x) x.call(document); }
+    else { const e=document.documentElement, r=e.requestFullscreen||e.webkitRequestFullscreen; if(r){ const p=r.call(e); if(p&&p.catch) p.catch(function(){}); } }
+  }catch(err){}
+}
+function syncFsBtn(){ const b=document.getElementById('btn-fs'); if(b) b.classList.toggle('on', fsActive()); }
+document.addEventListener('fullscreenchange', syncFsBtn);
+document.addEventListener('webkitfullscreenchange', syncFsBtn);
+(function(){ const b=document.getElementById('btn-fs'); if(!b) return;
+  if(!fsSupported()){ b.style.display='none'; return; }
+  b.onclick=function(){ toggleFullscreen(); };
+})();
+
 // ============================================================ start / end
 function startGame(){
   S.mode='play'; S.dayT=0; S.buzz=50; S.happy=80; S.inv=30; S.money=5000;
@@ -1333,7 +1360,7 @@ document.getElementById('btn-replay').onclick=function(){ sfx.click(); startGame
 // ============================================================ boot
 window.__pam = { S:S, pam:pam, ZONES:ZONES, AMEN:AMEN_DEF, AMEN_TILES:AMEN_TILES, floorEvents:floorEvents, w2s:function(a,b){return w2s(a,b);}, setLang:function(l){setLang(l);}, getLang:function(){return LANG;} };
 ['langtoggle','start-lang','end-lang'].forEach(function(id){ const e=document.getElementById(id); if(e) e.onclick=function(){ setLang(LANG==='en'?'fr':'en'); }; });
-console.info('Pamelafest — build r16 · mobile safe-area insets (notch) + scrollable/compact overlays + add-to-home-screen');
+console.info('Pamelafest — build r17 · fullscreen button (desktop/Android/iPad; hidden on iPhone Safari which lacks the API)');
 applyLang();
 resize();
 drawPortrait();

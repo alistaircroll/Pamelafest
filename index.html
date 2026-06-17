@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Pamela: Festival Floor — Startupfest 2026 @ Le Grand Quai</title>
+<title>Pamelafest — Le Grand Quai 2026</title>
 <!-- Fully self-contained: no external fonts, images, or any other files. Uses system fonts only. -->
 <style>
   :root{
@@ -56,6 +56,14 @@
   .stat.happy .barfill{background:var(--cyan);} .stat.happy .ic{color:var(--cyan);}
   .stat.inv .barfill{background:#b388ff;} .stat.inv .ic{color:#b388ff;}
   .stat.money .val{color:var(--good);}
+
+  #topright{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+  #langtoggle{pointer-events:auto;cursor:pointer;display:flex;align-items:center;gap:7px;
+    padding:7px 13px;font-size:12px;font-weight:800;letter-spacing:1.5px;}
+  #langtoggle .lt{color:var(--muted);transition:color .15s,transform .1s;}
+  #langtoggle .lt:hover{color:var(--ink);}
+  #langtoggle .lt.active{color:var(--cyan);}
+  #langtoggle .lt-sep{color:var(--edge);font-weight:400;}
 
   /* bottom dock */
   #dock{position:absolute;left:14px;bottom:14px;right:14px;display:flex;
@@ -161,19 +169,22 @@
 <div id="hud">
   <div id="topbar">
     <div class="panel" id="brand">
-      <div class="wm disp"><span class="a">START</span><span class="b">UPFEST</span></div>
-      <div class="sub">Le Grand Quai · 2026 · Floor Ops</div>
+      <div class="wm disp"><span class="a">PAMELA</span><span class="b">FEST</span></div>
+      <div class="sub" id="brand-sub">Le Grand Quai · 2026</div>
     </div>
     <div class="panel" id="clockwrap">
       <div id="phase">Doors Open</div>
       <div id="clock" class="mono"><span id="clock-t">9:00</span><span class="ampm" id="clock-ap">AM</span></div>
       <div id="daytrack"><div id="dayfill"></div></div>
     </div>
-    <div id="stats">
-      <div class="panel stat buzz"><div class="top"><span class="lab">Buzz</span><span class="ic">🔥</span></div><div class="val" id="v-buzz">50</div><div class="bar"><div class="barfill" id="b-buzz"></div></div></div>
-      <div class="panel stat happy"><div class="top"><span class="lab">Crowd</span><span class="ic">😀</span></div><div class="val" id="v-happy">80</div><div class="bar"><div class="barfill" id="b-happy"></div></div></div>
-      <div class="panel stat inv"><div class="top"><span class="lab">Investors</span><span class="ic">🤝</span></div><div class="val" id="v-inv">30</div><div class="bar"><div class="barfill" id="b-inv"></div></div></div>
-      <div class="panel stat money"><div class="top"><span class="lab">Budget</span><span class="ic">💸</span></div><div class="val" id="v-money">$5.0k</div><div class="bar"><div class="barfill" id="b-money" style="background:var(--good)"></div></div></div>
+    <div id="topright">
+      <div class="panel" id="langtoggle"><span class="lt" data-lang="en">EN</span><span class="lt-sep">/</span><span class="lt" data-lang="fr">FR</span></div>
+      <div id="stats">
+        <div class="panel stat buzz"><div class="top"><span class="lab" id="lab-buzz">Buzz</span><span class="ic">🔥</span></div><div class="val" id="v-buzz">50</div><div class="bar"><div class="barfill" id="b-buzz"></div></div></div>
+        <div class="panel stat happy"><div class="top"><span class="lab" id="lab-happy">Crowd</span><span class="ic">😀</span></div><div class="val" id="v-happy">80</div><div class="bar"><div class="barfill" id="b-happy"></div></div></div>
+        <div class="panel stat inv"><div class="top"><span class="lab" id="lab-inv">Investors</span><span class="ic">🤝</span></div><div class="val" id="v-inv">30</div><div class="bar"><div class="barfill" id="b-inv"></div></div></div>
+        <div class="panel stat money"><div class="top"><span class="lab" id="lab-money">Budget</span><span class="ic">💸</span></div><div class="val" id="v-money">$5.0k</div><div class="bar"><div class="barfill" id="b-money" style="background:var(--good)"></div></div></div>
+      </div>
     </div>
   </div>
 
@@ -183,11 +194,11 @@
     <div class="panel" id="pamcard">
       <div id="portrait"><canvas id="pcanvas" width="124" height="124"></canvas></div>
       <div>
-        <div id="pamname">Pamela <span class="role">Event Organizer</span></div>
+        <div id="pamname">Pamela <span class="role" id="pamrole">Event Organizer</span></div>
         <div id="needs">
-          <div class="nrow"><span class="nic">⚡</span><span class="nlab">Energy</span><span class="nbar"><span class="nfill energy" id="n-energy"></span></span></div>
-          <div class="nrow"><span class="nic">☕</span><span class="nlab">Caffeine</span><span class="nbar"><span class="nfill caf" id="n-caf"></span></span></div>
-          <div class="nrow"><span class="nic">🚻</span><span class="nlab">Comfort</span><span class="nbar"><span class="nfill comfort" id="n-comfort"></span></span></div>
+          <div class="nrow"><span class="nic">⚡</span><span class="nlab" id="nlab-energy">Energy</span><span class="nbar"><span class="nfill energy" id="n-energy"></span></span></div>
+          <div class="nrow"><span class="nic">☕</span><span class="nlab" id="nlab-caf">Caffeine</span><span class="nbar"><span class="nfill caf" id="n-caf"></span></span></div>
+          <div class="nrow"><span class="nic">🚻</span><span class="nlab" id="nlab-comfort">Comfort</span><span class="nbar"><span class="nfill comfort" id="n-comfort"></span></span></div>
         </div>
       </div>
     </div>
@@ -208,22 +219,22 @@
 
 <div id="tip"><div class="tfr" id="tip-fr"></div><div class="tname" id="tip-name"></div><div class="tdesc" id="tip-desc"></div></div>
 
-<div id="pausetag"><div class="pt disp">PAUSED</div></div>
+<div id="pausetag"><div class="pt disp" id="pausetag-t">PAUSED</div></div>
 
 <!-- START -->
 <div class="overlay" id="start">
   <div class="card">
-    <div class="kicker">Startupfest 2026 · Montréal</div>
-    <h1 class="title disp">MEET <span class="a">PAMELA</span><br><span class="b">FESTIVAL FLOOR</span></h1>
-    <p class="lede">You're Pamela, the organizer running the whole show at <b>Le Grand Quai</b>. Speakers, investors, demos and 4,000 founders all need you at once. Keep the floor alive from doors-open to close — and don't burn out.</p>
+    <div class="kicker" id="start-kicker">Pamelafest · Le Grand Quai · Montréal</div>
+    <h1 class="title disp"><span class="a">PAMELA</span><span class="b">FEST</span></h1>
+    <p class="lede" id="start-lede"></p>
     <div class="howto">
-      <div class="h"><span class="he">🖱️</span><span><b>Click the boardwalk</b> to walk. Click a pavilion to head there.</span></div>
-      <div class="h"><span class="he">⏳</span><span><b>Solve crises</b> — reach the bubble before its ring empties.</span></div>
-      <div class="h"><span class="he">☕</span><span><b>Refuel</b> at the Café, Washrooms & Lounge when your bars run low.</span></div>
-      <div class="h"><span class="he">🔥</span><span><b>Grow Buzz</b> & keep the Crowd happy. Lose the crowd, lose the day.</span></div>
+      <div class="h"><span class="he">🖱️</span><span id="howto-0"></span></div>
+      <div class="h"><span class="he">⏳</span><span id="howto-1"></span></div>
+      <div class="h"><span class="he">☕</span><span id="howto-2"></span></div>
+      <div class="h"><span class="he">🔥</span><span id="howto-3"></span></div>
     </div>
     <button class="cta" id="btn-start">Open the doors ▸</button>
-    <div class="credit">A tiny sim of the real Le Grand Quai floorplan</div>
+    <div class="credit" id="start-credit"></div>
   </div>
 </div>
 
@@ -235,14 +246,14 @@
     <h1 class="title disp" id="end-title" style="font-size:clamp(24px,5vw,38px)">SOLD-OUT SUCCESS</h1>
     <p class="lede" id="end-lede"></p>
     <div class="scoregrid">
-      <div class="scell"><div class="sl">Final Buzz</div><div class="sv" id="e-buzz" style="color:var(--mag)">0</div></div>
-      <div class="scell"><div class="sl">Crowd Mood</div><div class="sv" id="e-happy" style="color:var(--cyan)">0</div></div>
-      <div class="scell"><div class="sl">Investor Heat</div><div class="sv" id="e-inv" style="color:#b388ff">0</div></div>
-      <div class="scell"><div class="sl">Budget Left</div><div class="sv" id="e-money" style="color:var(--good)">$0</div></div>
-      <div class="scell"><div class="sl">Crises Solved</div><div class="sv" id="e-done">0</div></div>
-      <div class="scell"><div class="sl">Crises Missed</div><div class="sv" id="e-fail" style="color:var(--bad)">0</div></div>
+      <div class="scell"><div class="sl" id="sl-buzz">Final Buzz</div><div class="sv" id="e-buzz" style="color:var(--mag)">0</div></div>
+      <div class="scell"><div class="sl" id="sl-happy">Crowd Mood</div><div class="sv" id="e-happy" style="color:var(--cyan)">0</div></div>
+      <div class="scell"><div class="sl" id="sl-inv">Investor Heat</div><div class="sv" id="e-inv" style="color:#b388ff">0</div></div>
+      <div class="scell"><div class="sl" id="sl-money">Budget Left</div><div class="sv" id="e-money" style="color:var(--good)">$0</div></div>
+      <div class="scell"><div class="sl" id="sl-done">Crises Solved</div><div class="sv" id="e-done">0</div></div>
+      <div class="scell"><div class="sl" id="sl-fail">Crises Missed</div><div class="sv" id="e-fail" style="color:var(--bad)">0</div></div>
     </div>
-    <div style="font-size:13px;color:var(--muted);margin:-6px 0 20px">Total score <b class="mono" id="e-score" style="color:var(--ink);font-size:18px">0</b></div>
+    <div style="font-size:13px;color:var(--muted);margin:-6px 0 20px"><span id="e-score-label">Total score</span> <b class="mono" id="e-score" style="color:var(--ink);font-size:18px">0</b></div>
     <button class="cta" id="btn-replay">Run it back ▸</button>
   </div>
 </div>
@@ -330,38 +341,38 @@ AMEN_TILES.forEach(a=>setTile(a[0],a[1],a[2]));
 // crisis templates by category
 const CRISES={
  info:[
-  {ic:'🎫',t:'Badge printer jammed',ttl:20,work:2.6,r:{happy:7}},
-  {ic:'❓',t:'Lost founder needs directions',ttl:16,work:1.8,r:{happy:5}},
-  {ic:'📝',t:'Walk-in registration rush',ttl:18,work:3.0,r:{happy:6,buzz:3}},
+  {ic:'🎫',t:'Badge printer jammed',tf:'Imprimante à badges coincée',ttl:20,work:2.6,r:{happy:7}},
+  {ic:'❓',t:'Lost founder needs directions',tf:'Fondateur perdu cherche son chemin',ttl:16,work:1.8,r:{happy:5}},
+  {ic:'📝',t:'Walk-in registration rush',tf:'Afflux d’inscriptions sur place',ttl:18,work:3.0,r:{happy:6,buzz:3}},
  ],
  demo:[
-  {ic:'🔌',t:'Demo booth lost power',ttl:17,work:2.8,r:{buzz:7,inv:3},cost:120},
-  {ic:'🐛',t:'Live demo crashed on stage',ttl:14,work:3.2,r:{buzz:8}},
-  {ic:'📺',t:'Screen won’t mirror',ttl:18,work:2.4,r:{buzz:5,happy:3}},
+  {ic:'🔌',t:'Demo booth lost power',tf:'Panne de courant au kiosque démo',ttl:17,work:2.8,r:{buzz:7,inv:3},cost:120},
+  {ic:'🐛',t:'Live demo crashed on stage',tf:'La démo en direct a planté sur scène',ttl:14,work:3.2,r:{buzz:8}},
+  {ic:'📺',t:'Screen won’t mirror',tf:'L’écran refuse de se dupliquer',ttl:18,work:2.4,r:{buzz:5,happy:3}},
  ],
  stage:[
-  {ic:'🎤',t:'Mic check before the keynote',ttl:19,work:2.6,r:{buzz:10,happy:3}},
-  {ic:'🔥',t:'Crowd needs hyping up',ttl:15,work:2.2,r:{buzz:9}},
-  {ic:'⏱️',t:'Speaker is running late',ttl:16,work:3.0,r:{buzz:6,happy:4}},
-  {ic:'🎟️',t:'Set up the next panel',ttl:20,work:3.4,r:{buzz:7},cost:150},
+  {ic:'🎤',t:'Mic check before the keynote',tf:'Test de micro avant la conférence',ttl:19,work:2.6,r:{buzz:10,happy:3}},
+  {ic:'🔥',t:'Crowd needs hyping up',tf:'Il faut survolter la foule',ttl:15,work:2.2,r:{buzz:9}},
+  {ic:'⏱️',t:'Speaker is running late',tf:'Le conférencier est en retard',ttl:16,work:3.0,r:{buzz:6,happy:4}},
+  {ic:'🎟️',t:'Set up the next panel',tf:'Préparer le prochain panel',ttl:20,work:3.4,r:{buzz:7},cost:150},
  ],
  invest:[
-  {ic:'🤝',t:'Investor wants a match-up',ttl:17,work:2.8,r:{inv:12,money:600}},
-  {ic:'💰',t:'Help close a seed deal',ttl:15,work:3.2,r:{inv:10,money:900}},
-  {ic:'📊',t:'Pitch deck needs a fix',ttl:19,work:2.4,r:{inv:7,buzz:3}},
+  {ic:'🤝',t:'Investor wants a match-up',tf:'Un investisseur veut un jumelage',ttl:17,work:2.8,r:{inv:12,money:600}},
+  {ic:'💰',t:'Help close a seed deal',tf:'Aider à conclure une ronde d’amorçage',ttl:15,work:3.2,r:{inv:10,money:900}},
+  {ic:'📊',t:'Pitch deck needs a fix',tf:'Le pitch deck a besoin d’un coup de main',ttl:19,work:2.4,r:{inv:7,buzz:3}},
  ],
  judge:[
-  {ic:'🏆',t:'Judge a pitch round',ttl:18,work:3.0,r:{inv:8,buzz:5}},
-  {ic:'🧾',t:'Tally the prize scores',ttl:16,work:2.6,r:{inv:6,money:400}},
+  {ic:'🏆',t:'Judge a pitch round',tf:'Juger une ronde de pitchs',ttl:18,work:3.0,r:{inv:8,buzz:5}},
+  {ic:'🧾',t:'Tally the prize scores',tf:'Compiler les pointages du prix',ttl:16,work:2.6,r:{inv:6,money:400}},
  ],
  mentor:[
-  {ic:'🧠',t:'Mentor double-booked',ttl:18,work:2.6,r:{happy:6,inv:3}},
-  {ic:'🗓️',t:'Braindate no-show to re-match',ttl:17,work:2.4,r:{happy:5}},
-  {ic:'☕',t:'Mentor lounge needs a refill',ttl:20,work:2.0,r:{happy:4},cost:80},
+  {ic:'🧠',t:'Mentor double-booked',tf:'Mentor en double réservation',ttl:18,work:2.6,r:{happy:6,inv:3}},
+  {ic:'🗓️',t:'Braindate no-show to re-match',tf:'Absence à un braindate à re-jumeler',ttl:17,work:2.4,r:{happy:5}},
+  {ic:'☕',t:'Mentor lounge needs a refill',tf:'Le salon des mentors manque de café',ttl:20,work:2.0,r:{happy:4},cost:80},
  ],
  vip:[
-  {ic:'🥂',t:'VIP table mix-up at Le 10ᵉme',ttl:16,work:2.8,r:{happy:5,buzz:4,inv:4}},
-  {ic:'🌇',t:'Press wants a rooftop shot',ttl:15,work:2.6,r:{buzz:12}},
+  {ic:'🥂',t:'VIP table mix-up at Le 10ᵉme',tf:'Cafouillage de tables VIP au 10ᵉ',ttl:16,work:2.8,r:{happy:5,buzz:4,inv:4}},
+  {ic:'🌇',t:'Press wants a rooftop shot',tf:'Les médias veulent une photo sur le toit',ttl:15,work:2.6,r:{buzz:12}},
  ],
 };
 
@@ -371,24 +382,92 @@ const CRISES={
 // BAD  = walk there in time to MITIGATE it (miss it and the full penalty lands).
 const FLOOR_EVENTS=[
  // good — CLAIM
- {good:1,ic:'🚀',t:'A demo’s going viral — grab the moment!',e:{buzz:10}},
- {good:1,ic:'🦄',t:'A unicorn’s about to announce a round.',e:{inv:8,buzz:5}},
- {good:1,ic:'📸',t:'Press wants a candid shot of the floor.',e:{buzz:9}},
- {good:1,ic:'🤝',t:'A lost VC is wandering — steer them to a startup.',e:{inv:11}},
- {good:1,ic:'🐕',t:'A therapy dog has drawn a happy crowd.',e:{happy:9}},
- {good:1,ic:'💸',t:'A sponsor left a swag-bag windfall.',e:{money:1000}},
- {good:1,ic:'🎸',t:'An impromptu jam session is starting.',e:{buzz:5,happy:5}},
- {good:1,ic:'☕',t:'A free espresso cart just popped up.',e:{caf:18,happy:3}},
+ {good:1,ic:'🚀',t:'A demo’s going viral — grab the moment!',tf:'Une démo devient virale — saisissez l’instant!',e:{buzz:10}},
+ {good:1,ic:'🦄',t:'A unicorn’s about to announce a round.',tf:'Une licorne va annoncer une ronde.',e:{inv:8,buzz:5}},
+ {good:1,ic:'📸',t:'Press wants a candid shot of the floor.',tf:'Les médias veulent une photo spontanée du plancher.',e:{buzz:9}},
+ {good:1,ic:'🤝',t:'A lost VC is wandering — steer them to a startup.',tf:'Un investisseur égaré erre — dirigez-le vers une startup.',e:{inv:11}},
+ {good:1,ic:'🐕',t:'A therapy dog has drawn a happy crowd.',tf:'Un chien de thérapie attire une foule ravie.',e:{happy:9}},
+ {good:1,ic:'💸',t:'A sponsor left a swag-bag windfall.',tf:'Un commanditaire a laissé une manne de sacs-cadeaux.',e:{money:1000}},
+ {good:1,ic:'🎸',t:'An impromptu jam session is starting.',tf:'Une jam improvisée commence.',e:{buzz:5,happy:5}},
+ {good:1,ic:'☕',t:'A free espresso cart just popped up.',tf:'Un chariot d’espresso gratuit vient d’apparaître.',e:{caf:18,happy:3}},
  // bad — MITIGATE
- {good:0,ic:'🤮',t:'Someone lost their lunch on the floor.',e:{happy:-8}},
- {good:0,ic:'🧻',t:'A washroom is overflowing.',e:{happy:-7}},
- {good:0,ic:'🔌',t:'A tripped AV cable is sparking.',e:{buzz:-9}},
- {good:0,ic:'🐀',t:'A rat just bolted across the floor.',e:{happy:-8}},
- {good:0,ic:'🍺',t:'A spilled drinks tray made a slick.',e:{happy:-7}},
- {good:0,ic:'📢',t:'Speaker feedback is shrieking.',e:{buzz:-8}},
- {good:0,ic:'😤',t:'A founder is melting down in the queue.',e:{happy:-6,buzz:-4}},
- {good:0,ic:'🥗',t:'The buffet ran dry and people are grumbling.',e:{happy:-8}},
+ {good:0,ic:'🤮',t:'Someone lost their lunch on the floor.',tf:'Quelqu’un a vomi sur le plancher.',e:{happy:-8}},
+ {good:0,ic:'🧻',t:'A washroom is overflowing.',tf:'Une toilette déborde.',e:{happy:-7}},
+ {good:0,ic:'🔌',t:'A tripped AV cable is sparking.',tf:'Un câble AV arraché fait des étincelles.',e:{buzz:-9}},
+ {good:0,ic:'🐀',t:'A rat just bolted across the floor.',tf:'Un rat vient de filer sur le plancher.',e:{happy:-8}},
+ {good:0,ic:'🍺',t:'A spilled drinks tray made a slick.',tf:'Un plateau de verres renversé a fait une flaque.',e:{happy:-7}},
+ {good:0,ic:'📢',t:'Speaker feedback is shrieking.',tf:'Le larsen des haut-parleurs hurle.',e:{buzz:-8}},
+ {good:0,ic:'😤',t:'A founder is melting down in the queue.',tf:'Un fondateur pète les plombs dans la file.',e:{happy:-6,buzz:-4}},
+ {good:0,ic:'🥗',t:'The buffet ran dry and people are grumbling.',tf:'Le buffet est à sec et ça rouspète.',e:{happy:-8}},
 ];
+
+// ============================================================ i18n (EN / FR)
+let LANG = (navigator.language||'en').toLowerCase().indexOf('fr')===0 ? 'fr' : 'en';
+const I18N={
+ en:{
+  sub:'Le Grand Quai · 2026', role:'Event Organizer',
+  nEnergy:'Energy', nCaf:'Caffeine', nComfort:'Comfort',
+  sBuzz:'Buzz', sCrowd:'Crowd', sInv:'Investors', sMoney:'Budget',
+  btnPause:'Pause (P)', btnMute:'Mute (M)', btnHelp:'How to play (H)', paused:'PAUSED',
+  phases:['Doors Open','Morning Demos','Midday Pitches','Afternoon Rush','Golden Hour','Closing Keynote','Last Call'],
+  startKicker:'Pamelafest · Le Grand Quai · Montréal',
+  startLede:'You’re Pamela, the organizer running the whole show at Le Grand Quai. Speakers, investors, demos and 4,000 founders all need you at once. Keep the floor alive from doors-open to close — and don’t burn out.',
+  howto:['Click the boardwalk to walk; click a pavilion to head there.','Solve crises — reach the bubble before its ring empties.','Refuel at the Café, Washrooms & Lounge when your bars run low.','Grow Buzz and keep the Crowd happy — lose the crowd, lose the day.'],
+  cta:'Open the doors ▸', credit:'A tiny sim of the real Le Grand Quai floorplan',
+  closeKicker:'Doors Closed · 6:00 PM', failKicker:'Conference collapsed · ',
+  gradeTitle:{S:'LEGENDARY FESTIVAL',A:'SOLD-OUT SUCCESS',B:'SOLID SHOWING',C:'IT HELD TOGETHER',D:'ROUGH AROUND THE EDGES',F:'THE CROWD WALKED OUT'},
+  gradeLede:{S:'Investors, founders and press are still buzzing. Pamela ran the cleanest floor Le Grand Quai has ever seen.',A:'A standout edition. Deals closed, stages packed, barely a hiccup. Pamela earned that rooftop drink at Le 10ème.',B:'A good day on the floor. A few crises slipped, but the festival delivered and the crowd left happy.',C:'Bumpy but standing. Some moments shone, others sagged. Plenty to tighten up for next year.',D:'You survived to closing, but the floor felt frazzled. Buzz never caught fire and investors wandered.',F:'Attendee mood hit zero and Le Grand Quai emptied out. Even Pamela needs a coffee after that one.'},
+  slBuzz:'Final Buzz', slCrowd:'Crowd Mood', slInv:'Investor Heat', slMoney:'Budget Left', slDone:'Crises Solved', slFail:'Crises Missed',
+  totalScore:'Total score', replay:'Run it back ▸',
+  onMove:'On the move…', walkingTo:'Walking to ', tapPavilion:'Tap a pavilion or the floor.',
+  atZoneA:'At ', atZoneB:' — all quiet here.', atZoneSub:' · wait here, or tap another glowing pad.',
+  standingBy:'Standing by on the floor.', standingBySub:'Each pavilion’s coloured pad is its spot — tap one.',
+  workingA:'Working: ',
+  recharge:{caf:'Recharging Caffeine ☕',comfort:'Recharging Comfort 🚻',energy:'Recharging Energy ⚡'}, toppingUp:' — topping up',
+  doorsOpen:'Doors are open — let’s run a great festival!',
+  sorted:'Sorted: ', missed:'Missed: ', claimed:'Claimed: ', handled:'Handled: ',
+  goClaim:' — go claim it!', goHandle:' — go handle it!',
+  feClaimed:'claimed! ', feHandled:'handled! ', feMissed:'missed ', feMiss:'missed! 😠',
+  nudgeEnergy:'Pamela’s flagging — find a ⚡ Lounge', nudgeCaf:'Running on fumes — grab a ☕ Café', nudgeComfort:'Nature calls — hit the 🚻 Washrooms',
+  calm:'All calm here.', restoreA:'Stand here to restore ', restoreB:'.',
+  need:{caf:'Caffeine',comfort:'Comfort',energy:'Energy'},
+  claimTag:'CLAIM', fixTag:'FIX', entrance:'ENTRANCE'
+ },
+ fr:{
+  sub:'Le Grand Quai · 2026', role:'Organisatrice',
+  nEnergy:'Énergie', nCaf:'Caféine', nComfort:'Confort',
+  sBuzz:'Buzz', sCrowd:'Foule', sInv:'Investisseurs', sMoney:'Budget',
+  btnPause:'Pause (P)', btnMute:'Muet (M)', btnHelp:'Aide (H)', paused:'PAUSE',
+  phases:['Ouverture','Démos du matin','Pitchs du midi','Rush de l’après-midi','Heure dorée','Conférence de clôture','Dernier appel'],
+  startKicker:'Pamelafest · Le Grand Quai · Montréal',
+  startLede:'Vous êtes Pamela, l’organisatrice de tout l’événement au Grand Quai. Conférenciers, investisseurs, démos et 4 000 fondateurs ont tous besoin de vous en même temps. Gardez le plancher en vie de l’ouverture à la fermeture — sans vous épuiser.',
+  howto:['Cliquez le plancher pour marcher; cliquez un pavillon pour y aller.','Réglez les crises — atteignez la bulle avant que l’anneau se vide.','Refaites le plein au Café, aux Toilettes et au Salon quand vos jauges baissent.','Faites grimper le Buzz et gardez la Foule heureuse — perdez la foule, perdez la journée.'],
+  cta:'Ouvrir les portes ▸', credit:'Une mini-simulation du vrai plan du Grand Quai',
+  closeKicker:'Portes fermées · 18 h 00', failKicker:'Conférence effondrée · ',
+  gradeTitle:{S:'FESTIVAL LÉGENDAIRE',A:'SUCCÈS À GUICHETS FERMÉS',B:'BELLE PRESTATION',C:'ÇA A TENU',D:'PASSÉ DE JUSTESSE',F:'LA FOULE EST PARTIE'},
+  gradeLede:{S:'Investisseurs, fondateurs et médias en parlent encore. Pamela a orchestré le plancher le plus impeccable que Le Grand Quai ait connu.',A:'Une édition mémorable. Des ententes signées, des scènes combles, presque aucun pépin. Pamela a bien mérité son verre sur le toit au 10ᵉ.',B:'Une bonne journée sur le plancher. Quelques crises ont filé, mais le festival a livré et la foule est repartie heureuse.',C:'Cahoteux mais debout. Certains moments ont brillé, d’autres ont faibli. Beaucoup à resserrer pour l’an prochain.',D:'Vous avez tenu jusqu’à la fermeture, mais le plancher était à cran. Le buzz n’a jamais pris et les investisseurs ont déserté.',F:'L’humeur des participants est tombée à zéro et Le Grand Quai s’est vidé. Même Pamela a besoin d’un café après ça.'},
+  slBuzz:'Buzz final', slCrowd:'Humeur de la foule', slInv:'Intérêt investisseurs', slMoney:'Budget restant', slDone:'Crises réglées', slFail:'Crises manquées',
+  totalScore:'Score total', replay:'On recommence ▸',
+  onMove:'En déplacement…', walkingTo:'En route vers ', tapPavilion:'Touchez un pavillon ou le plancher.',
+  atZoneA:'À ', atZoneB:' — tout est calme ici.', atZoneSub:' · attendez ici, ou touchez une autre pastille.',
+  standingBy:'En attente sur le plancher.', standingBySub:'La pastille colorée de chaque pavillon est son emplacement — touchez-en une.',
+  workingA:'En cours : ',
+  recharge:{caf:'Recharge de Caféine ☕',comfort:'Recharge de Confort 🚻',energy:'Recharge d’Énergie ⚡'}, toppingUp:' — en cours',
+  doorsOpen:'Les portes sont ouvertes — à nous un super festival!',
+  sorted:'Réglé : ', missed:'Manqué : ', claimed:'Saisi : ', handled:'Réglé : ',
+  goClaim:' — allez la saisir!', goHandle:' — allez régler ça!',
+  feClaimed:'saisi! ', feHandled:'réglé! ', feMissed:'manqué ', feMiss:'manqué! 😠',
+  nudgeEnergy:'Pamela faiblit — trouvez un ⚡ Salon', nudgeCaf:'À sec — prenez un ☕ Café', nudgeComfort:'Petit besoin — aux 🚻 Toilettes',
+  calm:'Tout est calme ici.', restoreA:'Tenez-vous ici pour refaire le plein de ', restoreB:'.',
+  need:{caf:'Caféine',comfort:'Confort',energy:'Énergie'},
+  claimTag:'SAISIR', fixTag:'RÉGLER', entrance:'ENTRÉE'
+ }
+};
+const D=()=>I18N[LANG];
+const zoneName=z=>LANG==='fr'?z.fr:z.name;
+const taskName=tk=>LANG==='fr'?(tk.tf||tk.t):tk.t;
+const feName=ev=>LANG==='fr'?(ev.tf||ev.t):ev.t;
+const amenName=a=>LANG==='fr'?a.fr:a.name;
 
 // ============================================================ state
 const S={
@@ -542,21 +621,21 @@ function updateTooltip(mx,my){
   for(const zz of ZONES){ if(hover.x>=zz.gx-1&&hover.x<=zz.gx+1&&hover.y<=GY0&&hover.y>=-2){z=zz;break;} }
   const am = (tileType(hover.x,hover.y)||'');
   if(z){
-    document.getElementById('tip-fr').textContent=z.fr+'  ·  '+floorLabel(z.floor);
-    document.getElementById('tip-name').textContent=z.name;
-    document.getElementById('tip-desc').textContent= z.task? ('⚠ '+z.task.t) : 'All calm here.';
+    document.getElementById('tip-fr').textContent=floorLabel(z.floor);
+    document.getElementById('tip-name').textContent=zoneName(z);
+    document.getElementById('tip-desc').textContent= z.task? ('⚠ '+taskName(z.task)) : D().calm;
     showTip(mx,my);
   } else if(AMEN_DEF[am]){
     const a=AMEN_DEF[am];
-    document.getElementById('tip-fr').textContent=a.fr;
-    document.getElementById('tip-name').textContent=a.icon+' '+a.name;
-    document.getElementById('tip-desc').textContent='Stand here to restore '+(a.need==='caf'?'Caffeine':a.need==='comfort'?'Comfort':'Energy')+'.';
+    document.getElementById('tip-fr').textContent='';
+    document.getElementById('tip-name').textContent=a.icon+' '+amenName(a);
+    document.getElementById('tip-desc').textContent=D().restoreA+D().need[a.need]+D().restoreB;
     showTip(mx,my);
   } else hideTip();
 }
 function showTip(mx,my){ tip.style.opacity='1'; tip.style.left=Math.min(mx+14,CW-244)+'px'; tip.style.top=(my+14)+'px'; }
 function hideTip(){ tip.style.opacity='0'; }
-function floorLabel(f){ return f+(f===1?'st':f===2?'nd':f===3?'rd':'th')+' Floor'; }
+function floorLabel(f){ if(LANG==='fr') return (f===1?'1er':f+'ᵉ')+' étage'; return f+(f===1?'st':f===2?'nd':f===3?'rd':'th')+' Floor'; }
 
 // ============================================================ crises
 function spawnCrisis(){
@@ -566,7 +645,7 @@ function spawnCrisis(){
   const tmpl=choice(CRISES[z.cat]);
   const dayFrac=S.dayT/DAY_LEN;
   const ttl=tmpl.ttl*(1-0.28*dayFrac); // harsher later
-  z.task={ ic:tmpl.ic, t:tmpl.t, work:tmpl.work, r:tmpl.r, cost:tmpl.cost, max:ttl, ttl:ttl, born:S.dayT };
+  z.task={ ic:tmpl.ic, t:tmpl.t, tf:tmpl.tf, work:tmpl.work, r:tmpl.r, cost:tmpl.cost, max:ttl, ttl:ttl, born:S.dayT };
   z.flash=1;
 }
 function floorEventCap(){ return 1; }   // never more than one pop-up at a time
@@ -582,7 +661,7 @@ function spawnFloorEvent(){
   if(ev.good===feLastGood) feRun++; else { feLastGood=ev.good; feRun=1; }
   const ttl=lerp(12,8,S.evening);
   floorEvents.push({x:tx,y:ty,ev:ev,ttl:ttl,max:ttl});
-  toast((ev.good?'🎉 ':'⚠️ ')+ev.t+(ev.good?' — go claim it!':' — go handle it!'), ev.good?'good':'bad', ev.ic);
+  toast((ev.good?'🎉 ':'⚠️ ')+feName(ev)+(ev.good?D().goClaim:D().goHandle), ev.good?'good':'bad', ev.ic);
   sfx.start();
 }
 function resolveFloorEvent(fe, handled){
@@ -595,10 +674,10 @@ function resolveFloorEvent(fe, handled){
   apply('buzz','🔥'); apply('happy','😀'); apply('inv','🤝'); apply('caf','☕'); apply('comfort','🚻'); apply('energy','⚡'); apply('money','');
   if(handled) S.happy=clamp(S.happy+(good?1:2),0,100);   // small crowd thanks for being on top of it
   const col = handled ? (good?'#3ce08a':'#5fb8ff') : (good?'#a99fe0':'#ff5470');
-  const label = handled ? (good?'claimed! ':'handled! ') : (good?'missed ':'');
+  const label = handled ? (good?D().feClaimed:D().feHandled) : (good?D().feMissed:'');
   addFloat(fe.x-0.5, fe.y-0.5, label+parts.join(' '), col, 15);
-  if(handled){ sfx.done(); toast((good?'Claimed: ':'Handled: ')+fe.ev.t,'good',fe.ev.ic); }
-  else if(!good){ sfx.fail(); toast('Missed: '+fe.ev.t,'bad',fe.ev.ic); }
+  if(handled){ sfx.done(); toast((good?D().claimed:D().handled)+feName(fe.ev),'good',fe.ev.ic); }
+  else if(!good){ sfx.fail(); toast(D().missed+feName(fe.ev),'bad',fe.ev.ic); }
 }
 function startWork(z){
   const caffeined = S.caf>40;
@@ -606,7 +685,7 @@ function startWork(z){
   const dur = z.task.work * (caffeined?0.72:1) * (tired?1.55:1);
   pam.working={zone:z, t:0, dur:dur};
   sfx.start();
-  setAction('Working: '+z.task.t, z.name+' · '+floorLabel(z.floor), true);
+  setAction(D().workingA+taskName(z.task), zoneName(z)+' · '+floorLabel(z.floor), true);
 }
 function finishWork(){
   const z=pam.working.zone; const tk=z.task; pam.working=null;
@@ -627,14 +706,14 @@ function finishWork(){
   if(tk.cost)parts.push('-$'+tk.cost);
   addFloat(z.gx,GY0-0.2, parts.join('  '), '#3ce08a', 15);
   sfx.done();
-  toast('Sorted: '+tk.t,'good','✅');
+  toast(D().sorted+taskName(tk),'good','✅');
 }
 function expireCrisis(z){
   S.happy=clamp(S.happy-5,0,100);
   S.buzz=clamp(S.buzz-2.5,0,100);
-  addFloat(z.gx,GY0-0.2, 'missed! 😠', '#ff5470', 15);
+  addFloat(z.gx,GY0-0.2, D().feMiss, '#ff5470', 15);
   S.tasksFail++;
-  toast('Missed: '+z.task.t,'bad','😠');
+  toast(D().missed+taskName(z.task),'bad','😠');
   z.task=null; z.flash=0; sfx.fail();
 }
 
@@ -688,7 +767,7 @@ function update(dt){
   // one-shot nudge when a need dips critical
   for(const k of ['energy','caf','comfort']){
     if(S[k]<24 && !S.lowFlag[k]){ S.lowFlag[k]=true;
-      toast(k==='energy'?'Pamela’s flagging — find a ⚡ Lounge':k==='caf'?'Running on fumes — grab a ☕ Café':'Nature calls — hit the 🚻 Washrooms','info', k==='energy'?'⚡':k==='caf'?'☕':'🚻');
+      toast(k==='energy'?D().nudgeEnergy:k==='caf'?D().nudgeCaf:D().nudgeComfort,'info', k==='energy'?'⚡':k==='caf'?'☕':'🚻');
     } else if(S[k]>42 && S.lowFlag[k]){ S.lowFlag[k]=false; }
   }
 
@@ -755,7 +834,7 @@ function useAmenity(a,dt){
   if(S[a.need]>=100){ pam.using=null; return; }   // topped up — idle out cleanly
   pam.using=a.need;
   S[a.need]=clamp(S[a.need]+a.rate*dt,0,100);
-  setAction('Recharging '+(a.need==='caf'?'Caffeine ☕':a.need==='comfort'?'Comfort 🚻':'Energy ⚡'), a.name+' — topping up', true);
+  setAction(D().recharge[a.need], amenName(a)+D().toppingUp, true);
   if(Math.random()<dt*4) sfx.sip();
 }
 
@@ -763,9 +842,9 @@ function useAmenity(a,dt){
 function setAction(main,sub,bar){
   const am=document.getElementById('a-main'), as=document.getElementById('a-sub'), ab=document.getElementById('a-bar');
   if(main){ am.textContent=main; as.textContent=sub||''; }
-  else if(pam.path.length){ am.textContent=pam.goalZone?('Walking to '+pam.goalZone.name+'…'):'On the move…'; as.textContent=pam.goalZone?floorLabel(pam.goalZone.floor):'Tap a pavilion or the floor.'; }
-  else if(pam.atZone){ am.textContent='At '+pam.atZone.name+' — all quiet here.'; as.textContent=floorLabel(pam.atZone.floor)+' · wait here, or tap another glowing pad.'; }
-  else { am.textContent='Standing by on the floor.'; as.textContent='Each pavilion’s coloured pad is its spot — tap one.'; }
+  else if(pam.path.length){ am.textContent=pam.goalZone?(D().walkingTo+zoneName(pam.goalZone)+'…'):D().onMove; as.textContent=pam.goalZone?floorLabel(pam.goalZone.floor):D().tapPavilion; }
+  else if(pam.atZone){ am.textContent=D().atZoneA+zoneName(pam.atZone)+D().atZoneB; as.textContent=floorLabel(pam.atZone.floor)+D().atZoneSub; }
+  else { am.textContent=D().standingBy; as.textContent=D().standingBySub; }
   ab.style.display=bar?'block':'none';
 }
 function syncHUD(){
@@ -794,14 +873,15 @@ function syncHUD(){
 }
 function fmtClockParts(){
   const mins=Math.round(lerp(DAY_START,DAY_END,S.evening));
-  let h=Math.floor(mins/60), m=mins%60;
+  let h=Math.floor(mins/60), m=mins%60; const mm=String(m).padStart(2,'0');
+  if(LANG==='fr') return {t:h+' h '+mm, ap:''};
   const ap=h>=12?'PM':'AM'; const hh=((h+11)%12)+1;
-  return {t:hh+':'+String(m).padStart(2,'0'), ap:ap};
+  return {t:hh+':'+mm, ap:ap};
 }
 function dayPhase(){
-  const e=S.evening;
-  if(e<0.12)return'Doors Open'; if(e<0.3)return'Morning Demos'; if(e<0.5)return'Midday Pitches';
-  if(e<0.68)return'Afternoon Rush'; if(e<0.85)return'Golden Hour'; if(e<0.97)return'Closing Keynote'; return'Last Call';
+  const e=S.evening, P=D().phases;
+  if(e<0.12)return P[0]; if(e<0.3)return P[1]; if(e<0.5)return P[2];
+  if(e<0.68)return P[3]; if(e<0.85)return P[4]; if(e<0.97)return P[5]; return P[6];
 }
 
 // ============================================================ RENDER
@@ -893,7 +973,7 @@ function drawFloor(){
     ctx.font=(22*cam.scale)+'px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
     ctx.fillText(a.icon,c.x,c.y-3*cam.scale);
     ctx.font='800 '+(8.5*cam.scale)+'px system-ui,sans-serif'; ctx.fillStyle='rgba(255,255,255,.62)';
-    ctx.fillText(a.name.toUpperCase(), c.x, c.y+15*cam.scale);
+    ctx.fillText(amenName(a).toUpperCase(), c.x, c.y+15*cam.scale);
   }
   if(isWalk(hover.x,hover.y)){ diamond(hover.x,hover.y); ctx.fillStyle='rgba(51,214,231,.16)'; ctx.fill(); ctx.strokeStyle='rgba(51,214,231,.6)'; ctx.lineWidth=2; ctx.stroke(); }
   if(pam.path.length){ const g=pam.path[pam.path.length-1]; const m=w2s(g[0]+0.5,g[1]+0.5);
@@ -936,7 +1016,7 @@ function drawWaterAndDecor(){
   ctx.fillStyle='#15103a'; ctx.beginPath(); ctx.arc(0,0,4.2,0,TAU); ctx.fill();
   ctx.restore();
   ctx.font='800 '+(9*cam.scale)+'px system-ui,sans-serif'; ctx.fillStyle='#ff8ec4'; ctx.textAlign='center';
-  ctx.fillText('ENTRÉE / ENTRANCE', en.x, en.y+10*cam.scale);
+  ctx.fillText(D().entrance, en.x, en.y+10*cam.scale);
 }
 
 function drawZone(z){
@@ -971,29 +1051,25 @@ function drawZone(z){
   if(z.task) drawBubble(z, lcx, ly-30*cam.scale);
 }
 function drawLabel(z,cx,cy){
-  const fr=z.fr.toUpperCase(), nm=z.name.toUpperCase();
+  const nm=zoneName(z).toUpperCase();
   ctx.font='800 '+(11*cam.scale)+'px system-ui,sans-serif'; const w1=ctx.measureText(nm).width;
-  ctx.font='700 '+(7.5*cam.scale)+'px system-ui,sans-serif'; const w2=ctx.measureText(fr).width;
   const badge = floorBadge(z.floor);
   ctx.font='800 '+(7.5*cam.scale)+'px system-ui,sans-serif'; const wb=ctx.measureText(badge).width+8*cam.scale;
-  const pad=8*cam.scale; const bw=Math.max(w1,w2)+pad*2+wb; const bh=30*cam.scale;
+  const pad=8*cam.scale; const bw=w1+pad*2+wb; const bh=24*cam.scale;
   const x=cx-bw/2, y=cy-bh;
   const accent = z.color==='cyan'?'#33d6e7':'#ff2e8e';
   ctx.save();
   if(z.task){ ctx.shadowColor=accent; ctx.shadowBlur=(8+6*Math.sin(last/150))*cam.scale; }
-  rr(ctx,x,y,bw,bh,8*cam.scale); ctx.fillStyle='rgba(17,11,44,.94)'; ctx.fill();
+  rr(ctx,x,y,bw,bh,7*cam.scale); ctx.fillStyle='rgba(17,11,44,.94)'; ctx.fill();
   ctx.shadowBlur=0; ctx.lineWidth=1.4; ctx.strokeStyle=accent; ctx.globalAlpha= z.task?1:0.55; ctx.stroke(); ctx.globalAlpha=1;
   ctx.restore();
   rr(ctx, x+5*cam.scale, y+bh/2-7*cam.scale, wb-3*cam.scale, 14*cam.scale, 5*cam.scale);
   ctx.fillStyle=accent; ctx.fill();
   ctx.fillStyle='#0b0820'; ctx.font='800 '+(7.5*cam.scale)+'px system-ui,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
   ctx.fillText(badge, x+5*cam.scale+(wb-3*cam.scale)/2, y+bh/2);
-  ctx.textAlign='left';
-  ctx.fillStyle=accent; ctx.font='700 '+(7.5*cam.scale)+'px system-ui,sans-serif';
-  ctx.fillText(fr, x+wb+pad, y+10*cam.scale);
-  ctx.fillStyle='#f3f1ff'; ctx.font='800 '+(11*cam.scale)+'px system-ui,sans-serif';
-  ctx.fillText(nm, x+wb+pad, y+22*cam.scale);
-  ctx.textBaseline='alphabetic';
+  ctx.fillStyle='#f3f1ff'; ctx.font='800 '+(11*cam.scale)+'px system-ui,sans-serif'; ctx.textAlign='left';
+  ctx.fillText(nm, x+wb+pad, y+bh/2);
+  ctx.textBaseline='alphabetic'; ctx.textAlign='left';
 }
 function floorBadge(f){ return f===13?'13F':f===10?'10F':f===2?'2F':'1F'; }
 
@@ -1025,7 +1101,7 @@ function drawFloorEvent(fe){
   ctx.font=(15*cam.scale)+'px serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(fe.ev.ic,c.x,by);
   ctx.beginPath(); ctx.moveTo(c.x-4*cam.scale,by+r-1); ctx.lineTo(c.x,by+r+6*cam.scale); ctx.lineTo(c.x+4*cam.scale,by+r-1); ctx.closePath(); ctx.fillStyle='rgba(17,11,44,.94)'; ctx.fill();
   ctx.textBaseline='alphabetic'; ctx.font='800 '+(7.5*cam.scale)+'px system-ui,sans-serif'; ctx.fillStyle=col; ctx.textAlign='center';
-  ctx.fillText(good?'CLAIM':'FIX', c.x, by+r+15*cam.scale);
+  ctx.fillText(good?D().claimTag:D().fixTag, c.x, by+r+15*cam.scale);
 }
 function drawPamela(){ drawPam(ctx, w2s(pam.x+0.5,pam.y+0.5), cam.scale*1.32, true); }
 function drawPam(c, p, s, world){
@@ -1129,27 +1205,26 @@ function startGame(){
   document.getElementById('btn-pause').textContent='⏸';
   ac();
   spawnCrisis(); spawnCrisis();
-  toast('Doors are open — let’s run a great festival!','info','🎉');
+  toast(D().doorsOpen,'info','🎉');
   last=performance.now();
+}
+function renderEndText(){
+  if(!S.endGrade) return;
+  const d=D(), g=S.endGrade;
+  const ck=fmtClockParts(); const tstr=ck.t+(ck.ap?' '+ck.ap:'');
+  document.getElementById('end-kicker').textContent = S.endSurvived ? d.closeKicker : (d.failKicker+tstr);
+  document.getElementById('end-title').textContent = d.gradeTitle[g];
+  document.getElementById('end-lede').textContent = d.gradeLede[g];
 }
 function endGame(survived){
   S.mode='over';
   const score=Math.round(S.buzz*3 + S.happy*2 + S.inv*2 + S.money/45 + S.tasksDone*6 - S.tasksFail*8);
-  let grade,gtitle,glede,kick;
-  if(!survived){ const ck=fmtClockParts(); grade='F'; gtitle='THE CROWD WALKED OUT'; kick='Conference collapsed · '+ck.t+' '+ck.ap; glede='Attendee mood hit zero and Le Grand Quai emptied out. Even Pamela needs a coffee after that one.'; }
-  else {
-    kick='Doors Closed · 6:00 PM';
-    if(score>=860){grade='S';gtitle='LEGENDARY FESTIVAL';glede='Investors, founders and press are still buzzing. Pamela ran the cleanest floor Le Grand Quai has ever seen.';}
-    else if(score>=720){grade='A';gtitle='SOLD-OUT SUCCESS';glede='A standout edition. Deals closed, stages packed, barely a hiccup. Pamela earned that rooftop drink at Le 10ème.';}
-    else if(score>=560){grade='B';gtitle='SOLID SHOWING';glede='A good day on the floor. A few crises slipped, but the festival delivered and the crowd left happy.';}
-    else if(score>=380){grade='C';gtitle='IT HELD TOGETHER';glede='Bumpy but standing. Some moments shone, others sagged. Plenty to tighten up for next year.';}
-    else {grade='D';gtitle='ROUGH AROUND THE EDGES';glede='You survived to closing, but the floor felt frazzled. Buzz never caught fire and investors wandered.';}
-  }
-  document.getElementById('end-kicker').textContent=kick;
+  let grade;
+  if(!survived) grade='F';
+  else if(score>=860) grade='S'; else if(score>=720) grade='A'; else if(score>=560) grade='B'; else if(score>=380) grade='C'; else grade='D';
+  S.endGrade=grade; S.endSurvived=survived;
   document.getElementById('end-grade').textContent=grade;
   document.getElementById('end-grade').style.color = grade==='F'?'var(--bad)':grade==='S'?'#ffce46':'var(--cyan)';
-  document.getElementById('end-title').textContent=gtitle;
-  document.getElementById('end-lede').textContent=glede;
   document.getElementById('e-buzz').textContent=Math.round(S.buzz);
   document.getElementById('e-happy').textContent=Math.round(S.happy);
   document.getElementById('e-inv').textContent=Math.round(S.inv);
@@ -1157,15 +1232,39 @@ function endGame(survived){
   document.getElementById('e-done').textContent=S.tasksDone;
   document.getElementById('e-fail').textContent=S.tasksFail;
   document.getElementById('e-score').textContent=Math.max(0,score);
+  renderEndText();
   document.getElementById('end').classList.remove('hidden');
   if(survived) sfx.done(); else sfx.fail();
 }
+function setTxt(id,s){ const el=document.getElementById(id); if(el) el.textContent=s; }
+function applyLang(){
+  const d=D();
+  document.documentElement.lang=LANG;
+  document.querySelectorAll('#langtoggle .lt').forEach(function(el){ el.classList.toggle('active', el.getAttribute('data-lang')===LANG); });
+  setTxt('brand-sub',d.sub); setTxt('pamrole',d.role);
+  setTxt('nlab-energy',d.nEnergy); setTxt('nlab-caf',d.nCaf); setTxt('nlab-comfort',d.nComfort);
+  setTxt('lab-buzz',d.sBuzz); setTxt('lab-happy',d.sCrowd); setTxt('lab-inv',d.sInv); setTxt('lab-money',d.sMoney);
+  const bp=document.getElementById('btn-pause'); if(bp) bp.title=d.btnPause;
+  const bm=document.getElementById('btn-mute'); if(bm) bm.title=d.btnMute;
+  const bhl=document.getElementById('btn-help'); if(bhl) bhl.title=d.btnHelp;
+  setTxt('pausetag-t',d.paused);
+  setTxt('start-kicker',d.startKicker); setTxt('start-lede',d.startLede);
+  for(let i=0;i<4;i++) setTxt('howto-'+i,d.howto[i]);
+  setTxt('btn-start',d.cta); setTxt('start-credit',d.credit);
+  setTxt('sl-buzz',d.slBuzz); setTxt('sl-happy',d.slCrowd); setTxt('sl-inv',d.slInv); setTxt('sl-money',d.slMoney); setTxt('sl-done',d.slDone); setTxt('sl-fail',d.slFail);
+  setTxt('e-score-label',d.totalScore); setTxt('btn-replay',d.replay);
+  renderEndText();
+  if(S.mode!=='menu') syncHUD();
+}
+function setLang(l){ if(l===LANG) return; LANG=l; applyLang(); sfx.click(); }
 document.getElementById('btn-start').onclick=function(){ sfx.click(); startGame(); };
 document.getElementById('btn-replay').onclick=function(){ sfx.click(); startGame(); };
 
 // ============================================================ boot
-window.__pam = { S:S, pam:pam, ZONES:ZONES, AMEN:AMEN_DEF, AMEN_TILES:AMEN_TILES, floorEvents:floorEvents, w2s:function(a,b){return w2s(a,b);} };
-console.info('Pamela: Festival Floor — build r8 · floor events rarer + balanced (cap 1, anti-streak, gentler misses)');
+window.__pam = { S:S, pam:pam, ZONES:ZONES, AMEN:AMEN_DEF, AMEN_TILES:AMEN_TILES, floorEvents:floorEvents, w2s:function(a,b){return w2s(a,b);}, setLang:function(l){setLang(l);}, getLang:function(){return LANG;} };
+document.querySelectorAll('#langtoggle .lt').forEach(function(el){ el.onclick=function(){ setLang(el.getAttribute('data-lang')); }; });
+console.info('Pamelafest — build r9 · EN/FR toggle + rename');
+applyLang();
 resize();
 drawPortrait();
 requestAnimationFrame(frame);

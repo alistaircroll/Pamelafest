@@ -1,6 +1,8 @@
-# Pamela: Festival Floor
+# Pamelafest
 
-A tiny standalone, single-file browser game. You play **Pamela**, the event organizer running **Startupfest 2026** at Le Grand Quai in Montréal — keep the floor alive from doors-open to close without burning out.
+A tiny standalone, single-file browser game. You play **Pamela**, the event organizer running **Pamelafest** at Le Grand Quai in Montréal — keep the floor alive from doors-open to close without burning out.
+
+Playable in **English and French** — toggle in the top-right corner. 🇨🇦
 
 ▶️ **Play it:** https://alistaircroll.github.io/Pamelafest/
 

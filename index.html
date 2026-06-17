@@ -100,10 +100,14 @@
     display:flex;align-items:center;justify-content:center;transition:transform .1s,background .15s;}
   .btn:hover{background:rgba(54,40,120,.95);transform:translateY(-2px);}
   .btn:active{transform:translateY(0);}
-  #btn-fs svg{width:19px;height:19px;display:block;}
-  #btn-fs .fs-exit{display:none;}
-  #btn-fs.on .fs-enter{display:none;}
-  #btn-fs.on .fs-exit{display:block;}
+  .fstoggle svg{width:19px;height:19px;display:block;}
+  .fstoggle .fs-exit{display:none;}
+  .fstoggle.on .fs-enter{display:none;}
+  .fstoggle.on .fs-exit{display:block;}
+  .cardfs{position:absolute;top:14px;left:14px;z-index:3;cursor:pointer;padding:6px 10px;
+    border-radius:11px;border:1px solid rgba(120,100,220,.45);background:rgba(28,19,80,.9);
+    color:var(--cyan);display:flex;align-items:center;justify-content:center;transition:transform .1s,background .15s;}
+  .cardfs:hover{background:rgba(54,40,120,.95);transform:translateY(-1px);}
 
   /* toasts */
   #toasts{position:absolute;top:96px;left:50%;transform:translateX(-50%);
@@ -249,7 +253,7 @@
     </div>
 
     <div id="btns">
-      <button class="btn" id="btn-fs" title="Fullscreen (F)">
+      <button class="btn fstoggle" id="btn-fs" title="Fullscreen (F)">
         <svg class="fs-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
         <svg class="fs-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
       </button>
@@ -275,6 +279,10 @@
 <div class="overlay" id="start">
   <div class="card">
     <button class="cardlang" id="start-lang" title="Switch language / Changer de langue">FR</button>
+    <button class="cardfs fstoggle" id="start-fs" title="Fullscreen">
+      <svg class="fs-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+      <svg class="fs-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
+    </button>
     <div class="kicker" id="start-kicker">Pamelafest · Le Grand Quai · Montréal</div>
     <h1 class="title disp"><span class="a">PAMELA</span><span class="b">FEST</span></h1>
     <p class="lede" id="start-lede"></p>
@@ -579,7 +587,7 @@ function fitCamera(){
   for(const c of corners){const p=proj(c[0],c[1]);minx=Math.min(minx,p.x);maxx=Math.max(maxx,p.x);miny=Math.min(miny,p.y);maxy=Math.max(maxy,p.y);}
   const padX=44, padTop=128, padBot=132;
   const availW=CW-padX*2, availH=CH-padTop-padBot;
-  const s=Math.min(availW/(maxx-minx), availH/(maxy-miny), 1.55);
+  const s=Math.min(availW/(maxx-minx), availH/(maxy-miny), 3.4);  // fill the window (high cap; only bites on very large displays)
   cam.scale=s;
   cam.ox=(CW-(minx+maxx)*s)/2;
   cam.oy=padTop + (availH-(maxy-miny)*s)/2 - miny*s;
@@ -1279,12 +1287,15 @@ function toggleFullscreen(){
     else { const e=document.documentElement, r=e.requestFullscreen||e.webkitRequestFullscreen; if(r){ const p=r.call(e); if(p&&p.catch) p.catch(function(){}); } }
   }catch(err){}
 }
-function syncFsBtn(){ const b=document.getElementById('btn-fs'); if(b) b.classList.toggle('on', fsActive()); }
+const FS_BTNS=['btn-fs','start-fs'];
+function syncFsBtn(){ const on=fsActive(); FS_BTNS.forEach(function(id){ const b=document.getElementById(id); if(b) b.classList.toggle('on', on); }); }
 document.addEventListener('fullscreenchange', syncFsBtn);
 document.addEventListener('webkitfullscreenchange', syncFsBtn);
-(function(){ const b=document.getElementById('btn-fs'); if(!b) return;
-  if(!fsSupported()){ b.style.display='none'; return; }
-  b.onclick=function(){ toggleFullscreen(); };
+(function(){ const sup=fsSupported();
+  FS_BTNS.forEach(function(id){ const b=document.getElementById(id); if(!b) return;
+    if(!sup){ b.style.display='none'; return; }   // iPhone Safari has no fullscreen API
+    b.onclick=function(){ toggleFullscreen(); };
+  });
 })();
 
 // ============================================================ start / end
@@ -1360,7 +1371,7 @@ document.getElementById('btn-replay').onclick=function(){ sfx.click(); startGame
 // ============================================================ boot
 window.__pam = { S:S, pam:pam, ZONES:ZONES, AMEN:AMEN_DEF, AMEN_TILES:AMEN_TILES, floorEvents:floorEvents, w2s:function(a,b){return w2s(a,b);}, setLang:function(l){setLang(l);}, getLang:function(){return LANG;} };
 ['langtoggle','start-lang','end-lang'].forEach(function(id){ const e=document.getElementById(id); if(e) e.onclick=function(){ setLang(LANG==='en'?'fr':'en'); }; });
-console.info('Pamelafest — build r17 · fullscreen button (desktop/Android/iPad; hidden on iPhone Safari which lacks the API)');
+console.info('Pamelafest — build r18 · field fills the window (raised camera cap) + fullscreen button on start screen');
 applyLang();
 resize();
 drawPortrait();

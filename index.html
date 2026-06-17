@@ -159,6 +159,16 @@
   #pausetag .pt{font-family:'Arial Black','Avenir Next',sans-serif;font-size:42px;letter-spacing:6px;color:var(--ink);
     text-shadow:0 0 30px rgba(51,214,231,.5);}
 
+  /* landscape-only gate */
+  #rotate{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;align-items:center;justify-content:center;
+    gap:16px;text-align:center;padding:28px;background:radial-gradient(circle at 50% 38%,#1b1147,#0a0820);}
+  #rotate.show{display:flex;}
+  #rotate .ricon{font-size:62px;line-height:1;transform-origin:50% 50%;animation:rotatehint 2.6s ease-in-out infinite;}
+  @keyframes rotatehint{0%,38%{transform:rotate(0deg)}58%,100%{transform:rotate(-90deg)}}
+  #rotate .rtitle{font-size:24px;color:var(--ink);}
+  #rotate .rsub{font-size:14.5px;color:var(--muted);max-width:340px;line-height:1.5;}
+  #rotate .rsub.rfr{color:var(--cyan);}
+
   @media (max-width:760px){
     #stats{flex-wrap:wrap;justify-content:flex-end;max-width:230px;}
     .stat{min-width:104px;}
@@ -226,6 +236,13 @@
 
 <div id="pausetag"><div class="pt disp" id="pausetag-t">PAUSED</div></div>
 
+<div id="rotate">
+  <div class="ricon">📱</div>
+  <div class="rtitle disp">PLEASE ROTATE</div>
+  <div class="rsub">Pamelafest plays in landscape — turn your device sideways to play.</div>
+  <div class="rsub rfr">Pamelafest se joue en mode paysage — tournez votre appareil.</div>
+</div>
+
 <!-- START -->
 <div class="overlay" id="start">
   <div class="card">
@@ -292,8 +309,22 @@ function resize(){
   cv.style.width=CW+'px'; cv.style.height=CH+'px';
   ctx.setTransform(DPR,0,0,DPR,0,0);
   fitCamera();
+  checkOrientation();
 }
 window.addEventListener('resize',resize);
+// ---- landscape-only gate: pause + show rotate prompt while portrait, resume on landscape
+function checkOrientation(){
+  const portrait = window.innerHeight > window.innerWidth;
+  const el=document.getElementById('rotate');
+  if(portrait){
+    el.classList.add('show');
+    if(S.mode==='play'){ S.mode='paused'; S.portraitPaused=true; }
+  } else {
+    el.classList.remove('show');
+    if(S.portraitPaused){ S.portraitPaused=false; if(S.mode==='paused'){ S.mode='play'; last=performance.now(); } }
+  }
+}
+window.addEventListener('orientationchange', function(){ setTimeout(checkOrientation,120); });
 
 // ============================================================ iso math
 const TW=64, TH=32, HW=TW/2, HH=TH/2;
@@ -485,7 +516,7 @@ const S={
   tasksDone:0, tasksFail:0,
   spawnT:3, floorT:14, evening:0,
   lowFlag:{energy:false,caf:false,comfort:false},
-  muted:false,
+  muted:false, portraitPaused:false,
 };
 const DAY_LEN=300;            // seconds of real time for the whole day
 const DAY_START=9*60, DAY_END=18*60;
@@ -1271,7 +1302,7 @@ document.getElementById('btn-replay').onclick=function(){ sfx.click(); startGame
 // ============================================================ boot
 window.__pam = { S:S, pam:pam, ZONES:ZONES, AMEN:AMEN_DEF, AMEN_TILES:AMEN_TILES, floorEvents:floorEvents, w2s:function(a,b){return w2s(a,b);}, setLang:function(l){setLang(l);}, getLang:function(){return LANG;} };
 ['langtoggle','start-lang','end-lang'].forEach(function(id){ const e=document.getElementById(id); if(e) e.onclick=function(){ setLang(LANG==='en'?'fr':'en'); }; });
-console.info('Pamelafest — build r11 · switch-to-other-language button on HUD + landing + end screens');
+console.info('Pamelafest — build r12 · landscape-only (rotate-to-play gate, auto-pause in portrait)');
 applyLang();
 resize();
 drawPortrait();

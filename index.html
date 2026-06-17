@@ -313,10 +313,20 @@ function resize(){
 }
 window.addEventListener('resize',resize);
 // ---- landscape-only gate: pause + show rotate prompt while portrait, resume on landscape
+function isTouchDevice(){
+  // Primary input is a finger (phone/tablet) vs a mouse/trackpad (desktop/laptop).
+  if(window.matchMedia){
+    if(window.matchMedia('(pointer: coarse)').matches) return true;
+    if(window.matchMedia('(pointer: fine)').matches) return false;
+  }
+  return (navigator.maxTouchPoints||0) > 0;  // fallback for old browsers
+}
 function checkOrientation(){
-  const portrait = window.innerHeight > window.innerWidth;
+  // Gate only touch devices that can actually rotate — desktops/laptops (fine pointer,
+  // incl. a portrait monitor or a tall browser window) always play normally.
+  const gate = (window.innerHeight > window.innerWidth) && isTouchDevice();
   const el=document.getElementById('rotate');
-  if(portrait){
+  if(gate){
     el.classList.add('show');
     if(S.mode==='play'){ S.mode='paused'; S.portraitPaused=true; }
   } else {
@@ -1302,7 +1312,7 @@ document.getElementById('btn-replay').onclick=function(){ sfx.click(); startGame
 // ============================================================ boot
 window.__pam = { S:S, pam:pam, ZONES:ZONES, AMEN:AMEN_DEF, AMEN_TILES:AMEN_TILES, floorEvents:floorEvents, w2s:function(a,b){return w2s(a,b);}, setLang:function(l){setLang(l);}, getLang:function(){return LANG;} };
 ['langtoggle','start-lang','end-lang'].forEach(function(id){ const e=document.getElementById(id); if(e) e.onclick=function(){ setLang(LANG==='en'?'fr':'en'); }; });
-console.info('Pamelafest — build r12 · landscape-only (rotate-to-play gate, auto-pause in portrait)');
+console.info('Pamelafest — build r13 · rotate gate only on touch devices (desktop always plays)');
 applyLang();
 resize();
 drawPortrait();

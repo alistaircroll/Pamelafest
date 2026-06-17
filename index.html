@@ -125,7 +125,7 @@
     background:linear-gradient(120deg,var(--mag),transparent 40%,transparent 60%,var(--cyan));
     -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
     -webkit-mask-composite:xor;mask-composite:exclude;opacity:.6;pointer-events:none;}
-  .kicker{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;}
+  .kicker{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;padding:0 46px;}
   .title{font-size:clamp(30px,6vw,50px);line-height:.98;margin:0 0 6px;}
   .title .a{color:var(--mag);} .title .b{color:var(--cyan);}
   .lede{color:var(--muted);font-size:14.5px;line-height:1.55;margin:14px auto 22px;max-width:460px;}
@@ -139,9 +139,9 @@
   .cta:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(51,214,231,.4);}
   .cta:active{transform:translateY(0);}
   .credit{margin-top:18px;font-size:10.5px;letter-spacing:1.5px;color:#6f66a8;text-transform:uppercase;}
-  .cardlang{position:absolute;top:16px;right:16px;z-index:3;cursor:pointer;min-width:46px;padding:7px 12px;
-    border-radius:12px;border:1px solid rgba(120,100,220,.45);background:rgba(28,19,80,.9);
-    color:var(--cyan);font-family:inherit;font-weight:800;letter-spacing:1px;font-size:13px;
+  .cardlang{position:absolute;top:14px;right:14px;z-index:3;cursor:pointer;min-width:40px;padding:6px 10px;
+    border-radius:11px;border:1px solid rgba(120,100,220,.45);background:rgba(28,19,80,.9);
+    color:var(--cyan);font-family:inherit;font-weight:800;letter-spacing:1px;font-size:12px;
     transition:transform .1s,background .15s;}
   .cardlang:hover{background:rgba(54,40,120,.95);transform:translateY(-1px);}
 
@@ -314,12 +314,15 @@ function resize(){
 window.addEventListener('resize',resize);
 // ---- landscape-only gate: pause + show rotate prompt while portrait, resume on landscape
 function isTouchDevice(){
-  // Primary input is a finger (phone/tablet) vs a mouse/trackpad (desktop/laptop).
-  if(window.matchMedia){
-    if(window.matchMedia('(pointer: coarse)').matches) return true;
-    if(window.matchMedia('(pointer: fine)').matches) return false;
+  const mm = window.matchMedia;
+  if(mm){
+    // A real desktop/laptop has a fine pointer that can hover (mouse or trackpad) — never gate it,
+    // even in a tall window or on a portrait monitor.
+    if(mm('(pointer: fine)').matches && mm('(hover: hover)').matches) return false;
+    // Otherwise any touch-primary signal means a phone/tablet that should rotate.
+    if(mm('(pointer: coarse)').matches || mm('(hover: none)').matches) return true;
   }
-  return (navigator.maxTouchPoints||0) > 0;  // fallback for old browsers
+  return (navigator.maxTouchPoints||0) > 0 || ('ontouchstart' in window);  // fallback
 }
 function checkOrientation(){
   // Gate only touch devices that can actually rotate — desktops/laptops (fine pointer,
@@ -1312,7 +1315,7 @@ document.getElementById('btn-replay').onclick=function(){ sfx.click(); startGame
 // ============================================================ boot
 window.__pam = { S:S, pam:pam, ZONES:ZONES, AMEN:AMEN_DEF, AMEN_TILES:AMEN_TILES, floorEvents:floorEvents, w2s:function(a,b){return w2s(a,b);}, setLang:function(l){setLang(l);}, getLang:function(){return LANG;} };
 ['langtoggle','start-lang','end-lang'].forEach(function(id){ const e=document.getElementById(id); if(e) e.onclick=function(){ setLang(LANG==='en'?'fr':'en'); }; });
-console.info('Pamelafest — build r13 · rotate gate only on touch devices (desktop always plays)');
+console.info('Pamelafest — build r14 · robust touch detection for rotate gate; fix landing lang-button overlap');
 applyLang();
 resize();
 drawPortrait();

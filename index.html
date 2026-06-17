@@ -57,13 +57,13 @@
   .stat.inv .barfill{background:#b388ff;} .stat.inv .ic{color:#b388ff;}
   .stat.money .val{color:var(--good);}
 
-  #topright{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
-  #langtoggle{pointer-events:auto;cursor:pointer;display:flex;align-items:center;gap:7px;
-    padding:7px 13px;font-size:12px;font-weight:800;letter-spacing:1.5px;}
-  #langtoggle .lt{color:var(--muted);transition:color .15s,transform .1s;}
-  #langtoggle .lt:hover{color:var(--ink);}
-  #langtoggle .lt.active{color:var(--cyan);}
-  #langtoggle .lt-sep{color:var(--edge);font-weight:400;}
+  #topright{display:flex;align-items:stretch;gap:8px;}
+  #langtoggle{pointer-events:auto;cursor:pointer;min-width:48px;padding:0 14px;font-family:inherit;
+    font-size:14px;font-weight:800;letter-spacing:1px;color:var(--cyan);
+    display:flex;align-items:center;justify-content:center;border-radius:16px;
+    transition:transform .1s,background .15s;}
+  #langtoggle:hover{background:linear-gradient(180deg,rgba(54,40,120,.95),rgba(30,20,70,.95));transform:translateY(-2px);}
+  #langtoggle:active{transform:translateY(0);}
 
   /* bottom dock */
   #dock{position:absolute;left:14px;bottom:14px;right:14px;display:flex;
@@ -139,6 +139,11 @@
   .cta:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(51,214,231,.4);}
   .cta:active{transform:translateY(0);}
   .credit{margin-top:18px;font-size:10.5px;letter-spacing:1.5px;color:#6f66a8;text-transform:uppercase;}
+  .cardlang{position:absolute;top:16px;right:16px;z-index:3;cursor:pointer;min-width:46px;padding:7px 12px;
+    border-radius:12px;border:1px solid rgba(120,100,220,.45);background:rgba(28,19,80,.9);
+    color:var(--cyan);font-family:inherit;font-weight:800;letter-spacing:1px;font-size:13px;
+    transition:transform .1s,background .15s;}
+  .cardlang:hover{background:rgba(54,40,120,.95);transform:translateY(-1px);}
 
   /* end screen score grid */
   .scoregrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:6px auto 22px;max-width:440px;}
@@ -178,13 +183,13 @@
       <div id="daytrack"><div id="dayfill"></div></div>
     </div>
     <div id="topright">
-      <div class="panel" id="langtoggle"><span class="lt" data-lang="en">EN</span><span class="lt-sep">/</span><span class="lt" data-lang="fr">FR</span></div>
       <div id="stats">
         <div class="panel stat buzz"><div class="top"><span class="lab" id="lab-buzz">Buzz</span><span class="ic">🔥</span></div><div class="val" id="v-buzz">50</div><div class="bar"><div class="barfill" id="b-buzz"></div></div></div>
         <div class="panel stat happy"><div class="top"><span class="lab" id="lab-happy">Crowd</span><span class="ic">😀</span></div><div class="val" id="v-happy">80</div><div class="bar"><div class="barfill" id="b-happy"></div></div></div>
         <div class="panel stat inv"><div class="top"><span class="lab" id="lab-inv">Investors</span><span class="ic">🤝</span></div><div class="val" id="v-inv">30</div><div class="bar"><div class="barfill" id="b-inv"></div></div></div>
         <div class="panel stat money"><div class="top"><span class="lab" id="lab-money">Budget</span><span class="ic">💸</span></div><div class="val" id="v-money">$5.0k</div><div class="bar"><div class="barfill" id="b-money" style="background:var(--good)"></div></div></div>
       </div>
+      <button class="panel" id="langtoggle" title="Switch language / Changer de langue">FR</button>
     </div>
   </div>
 
@@ -224,6 +229,7 @@
 <!-- START -->
 <div class="overlay" id="start">
   <div class="card">
+    <button class="cardlang" id="start-lang" title="Switch language / Changer de langue">FR</button>
     <div class="kicker" id="start-kicker">Pamelafest · Le Grand Quai · Montréal</div>
     <h1 class="title disp"><span class="a">PAMELA</span><span class="b">FEST</span></h1>
     <p class="lede" id="start-lede"></p>
@@ -241,6 +247,7 @@
 <!-- END -->
 <div class="overlay hidden" id="end">
   <div class="card">
+    <button class="cardlang" id="end-lang" title="Switch language / Changer de langue">FR</button>
     <div class="kicker" id="end-kicker">Doors Closed · 18:00</div>
     <div class="grade disp" id="end-grade">A</div>
     <h1 class="title disp" id="end-title" style="font-size:clamp(24px,5vw,38px)">SOLD-OUT SUCCESS</h1>
@@ -1240,7 +1247,8 @@ function setTxt(id,s){ const el=document.getElementById(id); if(el) el.textConte
 function applyLang(){
   const d=D();
   document.documentElement.lang=LANG;
-  document.querySelectorAll('#langtoggle .lt').forEach(function(el){ el.classList.toggle('active', el.getAttribute('data-lang')===LANG); });
+  const tgt = LANG==='en'?'FR':'EN';
+  ['langtoggle','start-lang','end-lang'].forEach(function(id){ const e=document.getElementById(id); if(e) e.textContent=tgt; });
   setTxt('brand-sub',d.sub); setTxt('pamrole',d.role);
   setTxt('nlab-energy',d.nEnergy); setTxt('nlab-caf',d.nCaf); setTxt('nlab-comfort',d.nComfort);
   setTxt('lab-buzz',d.sBuzz); setTxt('lab-happy',d.sCrowd); setTxt('lab-inv',d.sInv); setTxt('lab-money',d.sMoney);
@@ -1262,8 +1270,8 @@ document.getElementById('btn-replay').onclick=function(){ sfx.click(); startGame
 
 // ============================================================ boot
 window.__pam = { S:S, pam:pam, ZONES:ZONES, AMEN:AMEN_DEF, AMEN_TILES:AMEN_TILES, floorEvents:floorEvents, w2s:function(a,b){return w2s(a,b);}, setLang:function(l){setLang(l);}, getLang:function(){return LANG;} };
-document.querySelectorAll('#langtoggle .lt').forEach(function(el){ el.onclick=function(){ setLang(el.getAttribute('data-lang')); }; });
-console.info('Pamelafest — build r9 · EN/FR toggle + rename');
+['langtoggle','start-lang','end-lang'].forEach(function(id){ const e=document.getElementById(id); if(e) e.onclick=function(){ setLang(LANG==='en'?'fr':'en'); }; });
+console.info('Pamelafest — build r11 · switch-to-other-language button on HUD + landing + end screens');
 applyLang();
 resize();
 drawPortrait();

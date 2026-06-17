@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Pamelafest" />
 <title>Pamelafest — Le Grand Quai 2026</title>
 <!-- Fully self-contained: no external fonts, images, or any other files. Uses system fonts only. -->
 <style>
@@ -31,7 +35,7 @@
     box-shadow:var(--shadow);backdrop-filter:blur(8px);}
 
   /* top bar */
-  #topbar{position:absolute;top:14px;left:14px;right:14px;display:flex;
+  #topbar{position:absolute;top:calc(14px + env(safe-area-inset-top));left:calc(14px + env(safe-area-inset-left));right:calc(14px + env(safe-area-inset-right));display:flex;
     justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;}
   #brand{padding:10px 16px;display:flex;flex-direction:column;gap:2px;}
   #brand .wm{font-size:18px;line-height:1;}
@@ -66,7 +70,7 @@
   #langtoggle:active{transform:translateY(0);}
 
   /* bottom dock */
-  #dock{position:absolute;left:14px;bottom:14px;right:14px;display:flex;
+  #dock{position:absolute;left:calc(14px + env(safe-area-inset-left));bottom:calc(14px + env(safe-area-inset-bottom));right:calc(14px + env(safe-area-inset-right));display:flex;
     justify-content:space-between;align-items:flex-end;gap:12px;}
   #pamcard{padding:12px 16px 12px 12px;display:flex;gap:12px;align-items:center;min-width:280px;}
   #portrait{width:62px;height:62px;border-radius:14px;flex:none;
@@ -115,10 +119,11 @@
   #tip .tdesc{color:var(--muted);font-size:11px;margin-top:3px;}
 
   /* overlays */
-  .overlay{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;
+  .overlay{position:fixed;inset:0;z-index:30;display:flex;overflow-y:auto;
     background:radial-gradient(circle at 50% 30%,rgba(40,26,99,.82),rgba(8,6,22,.94));
-    backdrop-filter:blur(10px);padding:24px;}
-  .card{max-width:600px;width:100%;text-align:center;padding:38px 36px;border-radius:24px;
+    backdrop-filter:blur(10px);
+    padding:max(20px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));}
+  .card{max-width:600px;width:100%;margin:auto;text-align:center;padding:38px 36px;border-radius:24px;
     background:linear-gradient(180deg,rgba(36,26,99,.96),rgba(17,11,44,.97));
     border:1px solid rgba(120,100,220,.45);box-shadow:var(--shadow);position:relative;overflow:hidden;}
   .card::before{content:"";position:absolute;inset:-2px;border-radius:24px;padding:2px;
@@ -174,6 +179,21 @@
     .stat{min-width:104px;}
     #action{display:none;}
     .howto{grid-template-columns:1fr;}
+  }
+  /* short viewports (e.g. a phone held in landscape): compact the start/end cards so nothing is cut off */
+  @media (max-height:540px){
+    .card{padding:20px 30px;}
+    .kicker{margin-bottom:4px;}
+    .title{font-size:clamp(24px,7vh,42px);}
+    .lede{font-size:12.5px;line-height:1.4;margin:8px auto 12px;}
+    .howto{grid-template-columns:1fr 1fr;gap:6px 16px;margin-bottom:14px;}
+    .howto .h{font-size:11px;}
+    .cta{padding:11px 26px;font-size:14px;}
+    .credit{margin-top:10px;}
+    .grade{font-size:clamp(30px,9vh,56px);}
+    .scoregrid{gap:6px;margin:4px auto 12px;}
+    .scell{padding:8px;}
+    .scell .sv{font-size:20px;}
   }
 </style>
 </head>
@@ -1313,7 +1333,7 @@ document.getElementById('btn-replay').onclick=function(){ sfx.click(); startGame
 // ============================================================ boot
 window.__pam = { S:S, pam:pam, ZONES:ZONES, AMEN:AMEN_DEF, AMEN_TILES:AMEN_TILES, floorEvents:floorEvents, w2s:function(a,b){return w2s(a,b);}, setLang:function(l){setLang(l);}, getLang:function(){return LANG;} };
 ['langtoggle','start-lang','end-lang'].forEach(function(id){ const e=document.getElementById(id); if(e) e.onclick=function(){ setLang(LANG==='en'?'fr':'en'); }; });
-console.info('Pamelafest — build r15 · desktop = no touchscreen (maxTouchPoints 0); never gated, any window shape');
+console.info('Pamelafest — build r16 · mobile safe-area insets (notch) + scrollable/compact overlays + add-to-home-screen');
 applyLang();
 resize();
 drawPortrait();

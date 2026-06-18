@@ -581,6 +581,7 @@ const DAY_START=9*60, DAY_END=18*60;
 const pam={ x:1, y:4, path:[], speed:3.7, walk:0, faceR:true,
   working:null,     // {zone, t, dur}
   using:null,       // need key while at amenity
+  toppedTile:null,  // station tile she just topped up at — stays idle there until she walks off
   goalZone:null, atZone:null };
 
 const floats=[];    // {gx,gy,vy,life,txt,color,size}
@@ -856,6 +857,7 @@ function update(dt){
   // ---- movement
   const moving=pam.path.length>0;
   if(moving){
+    pam.toppedTile=null;            // walking off a pad clears the topped-up latch
     const wp=pam.path[0]; const tx=wp[0], ty=wp[1];
     const dx=tx-pam.x, dy=ty-pam.y, d=Math.hypot(dx,dy);
     let spd=pam.speed;
@@ -941,7 +943,11 @@ function update(dt){
   syncHUD();
 }
 function useAmenity(a,dt){
-  if(S[a.need]>=100){ pam.using=null; return; }   // topped up — idle out cleanly
+  const tk=Math.round(pam.x)+','+Math.round(pam.y);
+  // Once she's topped up she idles out cleanly and won't re-grab the SAME pad until she walks off it.
+  // (Needs decay a hair every frame before this runs, so a bare ">=100" check never fires — latch the tile.)
+  if(pam.toppedTile===tk){ pam.using=null; return; }
+  if(S[a.need]>=99.5){ pam.using=null; pam.toppedTile=tk; return; }   // topped up — idle out cleanly
   pam.using=a.need;
   S[a.need]=clamp(S[a.need]+a.rate*dt,0,100);
   setAction(D().recharge[a.need], amenName(a)+D().toppingUp, true);
@@ -1329,7 +1335,7 @@ function startGame(){
   S.floorT=rand(14,22); S.lowFlag={energy:false,caf:false,comfort:false}; feLastGood=-1; feRun=0;
   ZONES.forEach(z=>{z.task=null;z.flash=0;});
   floats.length=0; floorEvents.length=0;
-  pam.x=1; pam.y=4; pam.path=[]; pam.working=null; pam.using=null; pam.goalZone=null; pam.faceR=true;
+  pam.x=1; pam.y=4; pam.path=[]; pam.working=null; pam.using=null; pam.toppedTile=null; pam.goalZone=null; pam.faceR=true;
   document.getElementById('start').classList.add('hidden');
   document.getElementById('end').classList.add('hidden');
   document.getElementById('pausetag').style.display='none';
@@ -1395,7 +1401,7 @@ document.getElementById('btn-replay').onclick=function(){ sfx.click(); startGame
 // ============================================================ boot
 window.__pam = { S:S, pam:pam, ZONES:ZONES, AMEN:AMEN_DEF, AMEN_TILES:AMEN_TILES, floorEvents:floorEvents, w2s:function(a,b){return w2s(a,b);}, setLang:function(l){setLang(l);}, getLang:function(){return LANG;} };
 ['langtoggle','start-lang','end-lang'].forEach(function(id){ const e=document.getElementById(id); if(e) e.onclick=function(){ setLang(LANG==='en'?'fr':'en'); }; });
-console.info('Pamelafest — build r21 · design-resolution stage, FIT-scaled as one unit (board + HUD scale together, any screen); inline favicon');
+console.info('Pamelafest — build r22 · fix: Pamela idles out cleanly once a station tops her up (no more stuck "topping up" forever)');
 applyLang();
 resize();
 drawPortrait();

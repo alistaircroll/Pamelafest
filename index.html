@@ -8,7 +8,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Pamelafest" />
 <title>Pamelafest — Le Grand Quai 2026</title>
-<!-- Fully self-contained: no external fonts, images, or any other files. Uses system fonts only. -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231a1140'/><text x='32' y='49' font-size='42' text-anchor='middle'>🔥</text></svg>" />
+<!-- Fully self-contained: no external fonts, images, or any other files (the favicon is an inline data-URI). Uses system fonts only. -->
 <style>
   :root{
     --bg0:#0b0820; --bg1:#140d2e; --bg2:#1b1147;
@@ -1394,7 +1395,7 @@ document.getElementById('btn-replay').onclick=function(){ sfx.click(); startGame
 // ============================================================ boot
 window.__pam = { S:S, pam:pam, ZONES:ZONES, AMEN:AMEN_DEF, AMEN_TILES:AMEN_TILES, floorEvents:floorEvents, w2s:function(a,b){return w2s(a,b);}, setLang:function(l){setLang(l);}, getLang:function(){return LANG;} };
 ['langtoggle','start-lang','end-lang'].forEach(function(id){ const e=document.getElementById(id); if(e) e.onclick=function(){ setLang(LANG==='en'?'fr':'en'); }; });
-console.info('Pamelafest — build r20 · design-resolution stage, FIT-scaled as one unit (board + HUD scale together, any screen)');
+console.info('Pamelafest — build r21 · design-resolution stage, FIT-scaled as one unit (board + HUD scale together, any screen); inline favicon');
 applyLang();
 resize();
 drawPortrait();

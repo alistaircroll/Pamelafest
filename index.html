@@ -24,18 +24,19 @@
   html,body{margin:0;height:100%;overflow:hidden;background:var(--bg0);
     font-family:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--ink);
     user-select:none;-webkit-user-select:none;}
-  #game{position:fixed;inset:0;display:block;cursor:pointer;}
+  #stage{position:fixed;left:50%;top:50%;width:1280px;height:800px;transform-origin:center center;transform:translate(-50%,-50%);}
+  #game{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:pointer;}
   .mono{font-family:ui-monospace,'SF Mono','Menlo',Consolas,monospace;}
   .disp{font-family:'Arial Black','Avenir Next','Helvetica Neue',sans-serif;letter-spacing:.5px;}
 
   /* ---------- HUD ---------- */
-  #hud{position:fixed;inset:0;pointer-events:none;z-index:10;}
+  #hud{position:absolute;inset:0;pointer-events:none;z-index:10;}
   .panel{background:linear-gradient(180deg,rgba(36,26,99,.92),rgba(20,14,52,.92));
     border:1px solid rgba(120,100,220,.35);border-radius:16px;
     box-shadow:var(--shadow);backdrop-filter:blur(8px);}
 
   /* top bar */
-  #topbar{position:absolute;top:calc(14px + env(safe-area-inset-top));left:calc(14px + env(safe-area-inset-left));right:calc(14px + env(safe-area-inset-right));display:flex;
+  #topbar{position:absolute;top:14px;left:14px;right:14px;display:flex;
     justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;}
   #brand{padding:10px 16px;display:flex;flex-direction:column;gap:2px;}
   #brand .wm{font-size:18px;line-height:1;}
@@ -70,7 +71,7 @@
   #langtoggle:active{transform:translateY(0);}
 
   /* bottom dock */
-  #dock{position:absolute;left:calc(14px + env(safe-area-inset-left));bottom:calc(14px + env(safe-area-inset-bottom));right:calc(14px + env(safe-area-inset-right));display:flex;
+  #dock{position:absolute;left:14px;bottom:14px;right:14px;display:flex;
     justify-content:space-between;align-items:flex-end;gap:12px;}
   #pamcard{padding:12px 16px 12px 12px;display:flex;gap:12px;align-items:center;min-width:280px;}
   #portrait{width:62px;height:62px;border-radius:14px;flex:none;
@@ -127,7 +128,7 @@
   #tip .tdesc{color:var(--muted);font-size:11px;margin-top:3px;}
 
   /* overlays */
-  .overlay{position:fixed;inset:0;z-index:30;display:flex;overflow-y:auto;
+  .overlay{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;overflow-y:auto;
     background:radial-gradient(circle at 50% 30%,rgba(40,26,99,.82),rgba(8,6,22,.94));
     backdrop-filter:blur(10px);
     padding:max(20px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));}
@@ -206,6 +207,7 @@
 </style>
 </head>
 <body>
+<div id="stage">
 <canvas id="game"></canvas>
 
 <!-- HUD -->
@@ -262,6 +264,7 @@
       <button class="btn" id="btn-help" title="How to play (H)">❔</button>
     </div>
   </div>
+</div>
 </div>
 
 <div id="tip"><div class="tfr" id="tip-fr"></div><div class="tname" id="tip-name"></div><div class="tdesc" id="tip-desc"></div></div>
@@ -337,13 +340,19 @@ function rr(ctx,x,y,w,h,r){ // rounded rect path
 // ============================================================ canvas
 const cv=document.getElementById('game');
 const ctx=cv.getContext('2d');
-let CW=0,CH=0,DPR=1;
+const stage=document.getElementById('stage');
+const DESIGN_W=1280, DESIGN_H=800;   // fixed design resolution; the whole UI (board + HUD) is FIT-scaled to the viewport as one unit
+let CW=DESIGN_W,CH=DESIGN_H,DPR=1,VS=1;
 function resize(){
   DPR=Math.min(window.devicePixelRatio||1,2);
-  CW=window.innerWidth; CH=window.innerHeight;
-  cv.width=CW*DPR; cv.height=CH*DPR;
-  cv.style.width=CW+'px'; cv.style.height=CH+'px';
-  ctx.setTransform(DPR,0,0,DPR,0,0);
+  const vw=window.innerWidth, vh=window.innerHeight;
+  VS=Math.min(vw/DESIGN_W, vh/DESIGN_H);                         // FIT: scale the stage to fit the viewport, keep aspect
+  stage.style.transform='translate(-50%,-50%) scale('+VS+')';
+  CW=DESIGN_W; CH=DESIGN_H;                                      // everything is drawn + laid out in fixed design coordinates
+  cv.width=Math.max(1,Math.round(DESIGN_W*VS*DPR));             // backing store at final physical px → stays crisp under the transform
+  cv.height=Math.max(1,Math.round(DESIGN_H*VS*DPR));
+  cv.style.width=DESIGN_W+'px'; cv.style.height=DESIGN_H+'px';
+  ctx.setTransform(VS*DPR,0,0,VS*DPR,0,0);
   fitCamera();
   checkOrientation();
 }
@@ -582,12 +591,25 @@ let hover={x:-99,y:-99};
 // ============================================================ camera fit
 function fitCamera(){
   cam.scale=1;cam.ox=0;cam.oy=0;
+  // Measure the TRUE rendered extent (in scale-1 px), not just the floor tiles, so the board
+  // always contains itself at any window size — no clipping, no hand-tuned aspect caps.
   let minx=1e9,maxx=-1e9,miny=1e9,maxy=-1e9;
-  const corners=[[-1.5,-3],[GX1+2,-3],[GX1+2,7],[-1.5,7]];
-  for(const c of corners){const p=proj(c[0],c[1]);minx=Math.min(minx,p.x);maxx=Math.max(maxx,p.x);miny=Math.min(miny,p.y);maxy=Math.max(maxy,p.y);}
-  const padX=44, padTop=128, padBot=132;
-  const availW=CW-padX*2, availH=CH-padTop-padBot;
-  const s=Math.min(availW/(maxx-minx), availH/(maxy-miny), 3.4);  // fill the window (high cap; only bites on very large displays)
+  const inc=(x,y)=>{ if(x<minx)minx=x; if(x>maxx)maxx=x; if(y<miny)miny=y; if(y>maxy)maxy=y; };
+  const pt=(gx,gy)=>proj(gx,gy);
+  // floor band (a little beyond each edge for the rim + water on the left)
+  [[-1.8,2],[GX1+1.3,2],[GX1+1.3,5.3],[-1.8,5.3]].forEach(c=>{const p=pt(c[0],c[1]); inc(p.x,p.y);});
+  // pavilions: a building rises z.h*44 px and its floating label/bubble another ~116 px, spanning ~±104 px
+  for(const z of ZONES){ const b=pt(z.gx,0), topY=b.y-(z.h*44+116); inc(b.x-104,topY); inc(b.x+104,topY); }
+  // amenity station names sit ~32 px below their tile
+  for(const a of AMEN_TILES){ const p=pt(a[0],a[1]); inc(p.x,p.y+32); }
+  // décor: entrance pin (left/up), Bassin Alexandra label (down), Rue de la Commune (up)
+  { const p=pt(-1.8,3.4); inc(p.x,p.y-46); }
+  { const p=pt(2.5,7);   inc(p.x,p.y+42); }
+  { const p=pt(6,-2.6);  inc(p.x,p.y-16); }
+  // contain-fit into the space between the top/bottom HUD strips
+  const padX=20, padTop=92, padBot=104;
+  const availW=Math.max(60,CW-padX*2), availH=Math.max(60,CH-padTop-padBot);
+  const s=Math.min(availW/(maxx-minx), availH/(maxy-miny), 4);
   cam.scale=s;
   cam.ox=(CW-(minx+maxx)*s)/2;
   cam.oy=padTop + (availH-(maxy-miny)*s)/2 - miny*s;
@@ -665,18 +687,19 @@ function pickAt(sx,sy){
   if(isWalk(cx,cy)) return {kind:'tile',tx:cx,ty:cy};
   return null;
 }
+function evToDesign(e){ const r=cv.getBoundingClientRect(); return { x:(e.clientX-r.left)*(DESIGN_W/r.width), y:(e.clientY-r.top)*(DESIGN_H/r.height) }; }
 function onClick(e){
   if(S.mode!=='play') return;
-  const r=cv.getBoundingClientRect();
-  const hit=pickAt(e.clientX-r.left, e.clientY-r.top);
+  const p=evToDesign(e);
+  const hit=pickAt(p.x, p.y);
   if(!hit) return;
   const ok=gotoTile(hit.tx,hit.ty, hit.kind==='zone'?hit.zone:null);
   if(ok){ sfx.click(); }
 }
 cv.addEventListener('click',onClick);
 cv.addEventListener('mousemove',e=>{
-  const r=cv.getBoundingClientRect();
-  const g=s2g(e.clientX-r.left, e.clientY-r.top);
+  const p=evToDesign(e);
+  const g=s2g(p.x, p.y);
   hover.x=Math.floor(g.gx); hover.y=Math.floor(g.gy);
   updateTooltip(e.clientX,e.clientY);
 });
@@ -719,7 +742,7 @@ function updateTooltip(mx,my){
     showTip(mx,my);
   } else hideTip();
 }
-function showTip(mx,my){ tip.style.opacity='1'; tip.style.left=Math.min(mx+14,CW-244)+'px'; tip.style.top=(my+14)+'px'; }
+function showTip(mx,my){ tip.style.opacity='1'; tip.style.left=Math.min(mx+14,window.innerWidth-244)+'px'; tip.style.top=(my+14)+'px'; }
 function hideTip(){ tip.style.opacity='0'; }
 function floorLabel(f){ if(LANG==='fr') return (f===1?'1er':f+'ᵉ')+' étage'; return f+(f===1?'st':f===2?'nd':f===3?'rd':'th')+' Floor'; }
 
@@ -1371,7 +1394,7 @@ document.getElementById('btn-replay').onclick=function(){ sfx.click(); startGame
 // ============================================================ boot
 window.__pam = { S:S, pam:pam, ZONES:ZONES, AMEN:AMEN_DEF, AMEN_TILES:AMEN_TILES, floorEvents:floorEvents, w2s:function(a,b){return w2s(a,b);}, setLang:function(l){setLang(l);}, getLang:function(){return LANG;} };
 ['langtoggle','start-lang','end-lang'].forEach(function(id){ const e=document.getElementById(id); if(e) e.onclick=function(){ setLang(LANG==='en'?'fr':'en'); }; });
-console.info('Pamelafest — build r18 · field fills the window (raised camera cap) + fullscreen button on start screen');
+console.info('Pamelafest — build r20 · design-resolution stage, FIT-scaled as one unit (board + HUD scale together, any screen)');
 applyLang();
 resize();
 drawPortrait();
